@@ -1,5 +1,5 @@
     <?php 
-       $title = "Liste des films";
+       $title = "Liste des films"; 
        $description = "Découvrez la liste complète de mes films : notes, commentaires et fiches détaillées. Répertoire cinéma mis à jour régulièrement.";
        $keywords = "Cinéma, repertoire, film, dwwm22";
     ?>
