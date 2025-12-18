@@ -70,10 +70,87 @@ function getFilms(): array
         $req = $db->prepare("SELECT * FROM film ORDER BY created_at DESC");
         $req->execute();
         $films = $req->fetchAll();
-        $req->closeCursor();  // Non obligatoire.
+        $req->closeCursor(); // Non obligatoire.
     } catch (\PDOException $exception) {
         throw $exception;
     }
 
     return $films;
+}
+
+
+/**
+ * Cette fonction permet de récupérer un film en fonction de l'identifiant renseigné.
+ *
+ * @param integer $filmId
+ * 
+ * @return false|array
+ */
+function getFilm(int $filmId): false|array
+{
+    $db = connectToDb();
+
+    try {
+        $req = $db->prepare("SELECT * FROM film WHERE id=:id");
+        $req->bindValue(":id", $filmId);
+
+        $req->execute();
+        $film = $req->fetch();
+        $req->closeCursor();
+    } catch (\PDOException $exception) {
+        throw $exception;
+    }
+
+    return $film;
+}
+
+
+/**
+ * Cette fonction permet de mettre à jour un film dans la base de données.
+ *
+ * @param null|float $ratingRounded
+ * @param integer $filmId
+ * @param array $data
+ * 
+ * @return void
+ */
+function updateFilm(null|float $ratingRounded, int $filmId, array $data = []): void
+{
+    $db = connectToDb();
+
+    try {
+        $req = $db->prepare("UPDATE film SET title=:title, rating=:rating, comment=:comment, updated_at=now() WHERE id=:id");
+
+        $req->bindValue(":title", $data['title']);
+        $req->bindValue(":rating", $ratingRounded);
+        $req->bindValue(":comment", $data['comment']);
+        $req->bindValue(":id", $filmId);
+
+        $req->execute();
+        $req->closeCursor();
+    } catch (\PDOException $exception) {
+        throw $exception;
+    }
+}
+
+
+/**
+ * Cette fonction permet de supprimer le film dans la base de données.
+ *
+ * @param integer $filmId
+ * 
+ * @return void
+ */
+function deleteFilm(int $filmId): void
+{
+    $db = connectToDb();
+
+    try {
+        $req = $db->prepare("DELETE FROM film WHERE id=:id");
+        $req->bindValue(":id", $filmId);
+        $req->execute();
+        $req->closeCursor();
+    } catch (\PDOException $exception) {
+        throw $exception;
+    }
 }
